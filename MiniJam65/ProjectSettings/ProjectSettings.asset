@@ -647,7 +647,13 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
+    Analytics: 1
+    Build: 0
+    Collab: 0
+    Game Performance: 0
+    Purchasing: 0
     UNet: 1
+    Unity Ads: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -660,10 +666,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 1a148b21-275f-4fe0-9233-c053fe89de10
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: MiniJam65
+  organizationId: zactar-organization
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
