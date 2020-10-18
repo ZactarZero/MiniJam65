@@ -15,6 +15,9 @@ public class PlayerController : MonoBehaviour
 	public float runningSpeedMultiplier = 2.0f;
 	public float runningDebounce = 3.0f;
 	public float stamina = 10.0f;
+	public bool hasFirstKeycard = false;
+	public bool hasPassword = false;
+	public bool hasEye = false;
 
 	private Transform playerTransform;
 
