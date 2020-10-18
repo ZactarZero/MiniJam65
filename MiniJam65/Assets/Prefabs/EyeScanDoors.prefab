@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2662900229357821594}
   - component: {fileID: 7713769876895137728}
   m_Layer: 0
-  m_Name: RegularDoors 2
+  m_Name: EyeScanDoors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

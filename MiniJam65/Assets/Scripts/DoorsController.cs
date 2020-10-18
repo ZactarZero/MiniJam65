@@ -8,6 +8,8 @@ public class DoorsController : MonoBehaviour
     private Animator animator;
     private BoxCollider hitBox;
 
+    private PlayerController pc;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -18,19 +20,29 @@ public class DoorsController : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            pc = other.GetComponent<PlayerController>();
             switch (ot)
             {
                 case OpeningType.Regular:
                     OpenDoors();
                     break;
                 case OpeningType.Keycard:
-
+                    if (pc.hasFirstKeycard)
+                    {
+                        OpenDoors();
+                    }
                     break;
                 case OpeningType.Password:
-
+                    if (pc.hasPassword)
+                    {
+                        OpenDoors();
+                    }
                     break;
                 case OpeningType.EyeScan:
-
+                    if (pc.hasEye)
+                    {
+                        OpenDoors();
+                    }
                     break;
             }
         }
@@ -46,19 +58,28 @@ public class DoorsController : MonoBehaviour
                     CloseDoors();
                     break;
                 case OpeningType.Keycard:
-                    
+                    if (pc.hasFirstKeycard)
+                    {
+                        CloseDoors();
+                    }
                     break;
                 case OpeningType.Password:
-
+                    if (pc.hasPassword)
+                    {
+                        CloseDoors();
+                    }
                     break;
                 case OpeningType.EyeScan:
-
+                    if (pc.hasEye)
+                    {
+                        CloseDoors();
+                    }
                     break;
             }
         }
     }
 
-    private void OpenDoors()
+    public void OpenDoors()
     {
         animator.SetTrigger("Open");
         hitBox.enabled = false;
@@ -76,5 +97,6 @@ public enum OpeningType
     Regular,
     Keycard,
     Password,
-    EyeScan
+    EyeScan,
+    Pod
 }

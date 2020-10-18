@@ -17,8 +17,11 @@ public class VentController : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            //if screwdriver
-            Open();
+            PlayerController pc = other.GetComponent<PlayerController>();
+            if (pc.hasScrewDriver)
+            {
+                Open();
+            }
         }
     }
 

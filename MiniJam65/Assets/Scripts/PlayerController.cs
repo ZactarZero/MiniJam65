@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+	private Interactable interactingObj;
 	private float horizontalInput;
 	private float verticalInput;
 	private float finalSpeed;
@@ -15,6 +16,7 @@ public class PlayerController : MonoBehaviour
 	public float runningSpeedMultiplier = 2.0f;
 	public float runningDebounce = 3.0f;
 	public float stamina = 10.0f;
+	public bool hasScrewDriver = false;
 	public bool hasFirstKeycard = false;
 	public bool hasPassword = false;
 	public bool hasEye = false;
@@ -63,6 +65,54 @@ public class PlayerController : MonoBehaviour
 		}
 
 		playerTransform.Translate(new Vector3(horizontalInput, 0, verticalInput).normalized * finalSpeed * Time.deltaTime);
+
+		if (Input.GetKeyDown(KeyCode.E))
+        {
+			PerformInteraction();
+
+		}
+	}
+
+	private void PerformInteraction()
+    {
+		Debug.Log(interactingObj);
+		if (interactingObj)
+		{
+			string interactionReturn = interactingObj.Interact();
+			switch (interactionReturn)
+			{
+				case "screwdriver":
+					hasScrewDriver = true;
+					break;
+				case "keycard":
+					hasFirstKeycard = true;
+					break;
+				case "password":
+					hasPassword = true;
+					break;
+				case "eye":
+					hasEye = true;
+					break;
+			}
+		}
+	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Interactable")
+        {
+			interactingObj = other.GetComponent<Interactable>();
+			Debug.Log(other.name + " in range");
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+		if (other.tag == "Interactable")
+		{
+			interactingObj = null;
+			Debug.Log(other.name + " out of range");
+		}
 	}
 
 }

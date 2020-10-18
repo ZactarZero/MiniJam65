@@ -10,19 +10,23 @@ public class EnemyController : MonoBehaviour
     public float walkSpeed;
     public float runSpeed;
     public float timeToReset;
+    public float timeBetweenAttacks;
 
     private NavMeshAgent agent;
     private SphereCollider detector;
+    private Animator anim;
     private State state;
-    private Transform target;
+    private Transform target = null;
     private Vector3 startPos;
     private bool stateChanged;
     private float resetTime = 0f;
+    private float nextAttackTime = 0f;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         detector = GetComponent<SphereCollider>();
+        anim = GetComponent<Animator>();
 
         detector.radius = detectionRange;
         state = State.Idle;
@@ -38,7 +42,7 @@ public class EnemyController : MonoBehaviour
             case State.Idle:
                 if (stateChanged)
                 {
-                    Debug.Log("is idle");
+                    anim.SetBool("IsWalking", false);
                     agent.SetDestination(startPos);
                     agent.stoppingDistance = 0f;
                     agent.speed = walkSpeed;
@@ -48,18 +52,22 @@ public class EnemyController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("still idle "+ agent.isStopped);
                     if (Time.time > resetTime && agent.isStopped)
                     {
+                        anim.SetBool("IsWalking", true);
                         agent.isStopped = false;
+                    }
+                    else if (agent.isStopped)
+                    {
+                        anim.SetBool("IsWalking", false);
                     }
                 }
                 break;
             case State.Chasing:
                 if (stateChanged)
                 {
-                    Debug.Log("is chasing ");
-                    agent.stoppingDistance = attackRange;
+                    anim.SetBool("IsWalking", true);
+                    agent.stoppingDistance = attackRange - 0.3f;
                     agent.SetDestination(target.position);
                     agent.speed = runSpeed;
                     stateChanged = false;
@@ -73,7 +81,6 @@ public class EnemyController : MonoBehaviour
                         stateChanged = true;
                     } else
                     {
-                        Debug.Log("still chasing" + agent.isStopped + agent.speed);
                         agent.SetDestination(target.position);
                     }
                 }
@@ -82,6 +89,7 @@ public class EnemyController : MonoBehaviour
             case State.Attacking:
                 if (stateChanged)
                 {
+                    anim.SetBool("IsWalking", false);
                     stateChanged = false;
                 }
                 else
@@ -89,19 +97,32 @@ public class EnemyController : MonoBehaviour
                     if (!target)
                     {
                         state = State.Idle;
+                        stateChanged = true;
                     }
                     else if (Vector3.Distance(transform.position, target.position) > attackRange)
                     {
                         state = State.Chasing;
+                        stateChanged = true;
                     }
                     else
                     {
-                        Debug.Log("Attacking");
+                        if (Time.time > nextAttackTime)
+                        {
+                            anim.SetTrigger("Attack");
+                            nextAttackTime = Time.time + timeBetweenAttacks;
+                        }
                     }
                 }
                 
                 break;
         }
+    }
+
+    public void GiveTarget(Transform newTarget)
+    {
+        state = State.Chasing;
+        stateChanged = true;
+        target = newTarget;
     }
 
     private void OnTriggerEnter(Collider other)
